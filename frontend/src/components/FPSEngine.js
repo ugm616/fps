@@ -285,6 +285,7 @@ const FPSEngine = ({ levelData, onBackToMenu }) => {
       >
         <Lighting />
         <Level levelData={levelData} onHit={handleHit} />
+        <AimHelper />
         <FPSController 
           levelData={levelData} 
           onHit={handleHit}
