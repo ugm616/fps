@@ -150,12 +150,15 @@ const Level = ({ levelData, onHit }) => {
       {levelData.objects.map((obj, index) => {
         const [width, height, depth] = obj.size || [1, 1, 1];
         const [x, y, z] = obj.position || [0, 0, 0];
+        const isTarget = obj.color === '#ff4444';
+        console.log(`Creating object ${index}: color=${obj.color}, isTarget=${isTarget}`); // Debug log
 
         return (
           <mesh 
             key={index} 
             position={[x, y, z]}
-            userData={{ isTarget: obj.color === '#ff4444' }} // Red boxes are targets
+            userData={{ isTarget }}
+            onPointerOver={() => console.log(`Hovering over object ${index}, isTarget: ${isTarget}`)}
           >
             <boxGeometry args={[width, height, depth]} />
             <meshLambertMaterial color={obj.color || '#888888'} />
