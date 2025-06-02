@@ -31,6 +31,8 @@ const FPSController = ({ levelData, onHit, health, setHealth }) => {
     const handleClick = () => {
       // Shooting mechanics
       if (controlsRef.current?.isLocked) {
+        console.log('Firing weapon!'); // Debug log
+        
         const direction = new THREE.Vector3();
         camera.getWorldDirection(direction);
         
@@ -38,12 +40,22 @@ const FPSController = ({ levelData, onHit, health, setHealth }) => {
         
         // Check for hits on scene objects
         const intersects = raycaster.current.intersectObjects(scene.children, true);
+        console.log('Raycaster intersects:', intersects.length); // Debug log
+        
+        let hitTarget = false;
         if (intersects.length > 0 && intersects[0].distance < 50) {
           const hitObject = intersects[0].object;
           console.log('Hit object:', hitObject, 'userData:', hitObject.userData); // Debug log
           if (hitObject.userData.isTarget) {
             onHit(hitObject);
+            hitTarget = true;
           }
+        }
+        
+        // Always consume ammo when firing (realistic FPS behavior)
+        if (!hitTarget) {
+          // Miss - still consume ammo
+          onHit(null);
         }
       }
     };
