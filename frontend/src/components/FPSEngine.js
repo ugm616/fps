@@ -191,6 +191,7 @@ const FPSEngine = ({ levelData, onBackToMenu }) => {
 
   const handleHit = (hitObject) => {
     // Handle target hits
+    console.log('Target hit!', hitObject); // Debug log
     if (hitObject.userData.isTarget) {
       setScore(prev => prev + 10);
       setAmmo(prev => Math.max(0, prev - 1));
