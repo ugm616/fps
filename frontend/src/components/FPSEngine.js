@@ -18,6 +18,16 @@ const FPSController = ({ levelData, onHit, health, setHealth }) => {
   
   const raycaster = useRef(new THREE.Raycaster());
   const [isGrounded, setIsGrounded] = useState(false);
+  
+  // Set spawn position when level data changes
+  useEffect(() => {
+    if (levelData?.spawn) {
+      const [x, y, z] = levelData.spawn.position;
+      camera.position.set(x, y, z);
+      velocity.current.set(0, 0, 0); // Reset velocity
+      console.log('Set camera spawn position to:', x, y, z);
+    }
+  }, [levelData, camera]);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
