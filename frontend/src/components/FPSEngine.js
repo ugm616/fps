@@ -299,16 +299,6 @@ const FPSEngine = ({ levelData, onBackToMenu }) => {
     return () => window.removeEventListener('keydown', handleEscape);
   }, []);
 
-  const { camera } = useThree();
-  useEffect(() => {
-    // Set spawn position properly
-    if (levelData?.spawn) {
-      const [x, y, z] = levelData.spawn.position;
-      camera.position.set(x, y, z);
-      console.log('Set camera spawn position to:', x, y, z);
-    }
-  }, [levelData, camera]);
-
   return (
     <div className="fps-container">
       <Canvas
