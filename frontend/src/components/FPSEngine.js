@@ -37,14 +37,12 @@ const FPSController = ({ levelData, onHit, health, setHealth }) => {
         raycaster.current.set(camera.position, direction);
         
         // Check for hits on scene objects
-        const scene = gl.domElement.closest('.fps-container').querySelector('canvas')?.__r3f?.scene;
-        if (scene) {
-          const intersects = raycaster.current.intersectObjects(scene.children, true);
-          if (intersects.length > 0 && intersects[0].distance < 50) {
-            const hitObject = intersects[0].object;
-            if (hitObject.userData.isTarget) {
-              onHit(hitObject);
-            }
+        const intersects = raycaster.current.intersectObjects(scene.children, true);
+        if (intersects.length > 0 && intersects[0].distance < 50) {
+          const hitObject = intersects[0].object;
+          console.log('Hit object:', hitObject, 'userData:', hitObject.userData); // Debug log
+          if (hitObject.userData.isTarget) {
+            onHit(hitObject);
           }
         }
       }
