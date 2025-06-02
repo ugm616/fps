@@ -164,24 +164,39 @@ const FPSController = ({ levelData, onHit, health, setHealth }) => {
       }
     });
     
-    const groundRay = new THREE.Raycaster(newPosition, new THREE.Vector3(0, -1, 0));
+    // Ground check with better positioning
+    const groundCheckPos = newPosition.clone();
+    groundCheckPos.y += 0.1; // Check slightly above the target position
+    const groundRay = new THREE.Raycaster(groundCheckPos, new THREE.Vector3(0, -1, 0));
     const groundIntersects = groundRay.intersectObjects(allMeshes, false);
     
-    if (groundIntersects.length > 0 && groundIntersects[0].distance < 1.8) {
-      newPosition.y = groundIntersects[0].point.y + 1.8;
-      velocity.current.y = 0;
-      setIsGrounded(true);
+    if (groundIntersects.length > 0) {
+      const groundY = groundIntersects[0].point.y;
+      const targetY = groundY + 1.8; // Player height
+      
+      if (newPosition.y <= targetY) {
+        newPosition.y = targetY;
+        velocity.current.y = 0;
+        setIsGrounded(true);
+        console.log('Player on ground at Y:', targetY);
+      } else {
+        setIsGrounded(false);
+      }
     } else {
       setIsGrounded(false);
+      console.log('No ground detected, player falling');
     }
 
-    // Wall collision detection (simple)
-    const wallRay = new THREE.Raycaster(camera.position, movement.normalize());
-    const wallIntersects = wallRay.intersectObjects(allMeshes, false);
-    
-    if (wallIntersects.length > 0 && wallIntersects[0].distance < 1) {
-      // Don't move if too close to wall
-      return;
+    // Wall collision detection (simple) - only check if we're moving horizontally
+    if (movement.length() > 0) {
+      const wallRay = new THREE.Raycaster(camera.position, movement.clone().normalize());
+      const wallIntersects = wallRay.intersectObjects(allMeshes, false);
+      
+      if (wallIntersects.length > 0 && wallIntersects[0].distance < 1) {
+        // Don't move if too close to wall
+        console.log('Wall collision detected');
+        return;
+      }
     }
 
     camera.position.copy(newPosition);
