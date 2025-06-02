@@ -35,14 +35,25 @@ const FPSController = ({ levelData, onHit, health, setHealth }) => {
         
         const direction = new THREE.Vector3();
         camera.getWorldDirection(direction);
+        direction.normalize(); // Ensure direction is normalized
         
-        raycaster.current.set(camera.position, direction);
+        console.log('Camera position:', camera.position.toArray());
+        console.log('Camera direction:', direction.toArray());
+        
+        // Set raycaster with a slight offset to avoid self-intersection
+        const origin = camera.position.clone();
+        origin.add(direction.clone().multiplyScalar(0.1)); // Small offset
+        
+        raycaster.current.set(origin, direction);
+        raycaster.current.far = 1000; // Set maximum distance
+        raycaster.current.near = 0.1; // Set minimum distance
         
         // Check for hits on scene objects - traverse all objects recursively
         const allObjects = [];
         scene.traverse((child) => {
           if (child.isMesh) {
             allObjects.push(child);
+            console.log('Mesh found:', child.type, 'position:', child.position.toArray(), 'userData:', child.userData);
           }
         });
         
