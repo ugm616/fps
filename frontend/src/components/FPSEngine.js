@@ -44,12 +44,19 @@ const FPSController = ({ levelData, onHit, health, setHealth }) => {
         console.log('Scene children:', scene.children.length, 'Mesh objects:', meshObjects.length, 'Intersects:', intersects.length); // Debug log
         
         let hitTarget = false;
-        if (intersects.length > 0 && intersects[0].distance < 50) {
-          const hitObject = intersects[0].object;
-          console.log('Hit object:', hitObject, 'userData:', hitObject.userData); // Debug log
-          if (hitObject.userData.isTarget) {
-            onHit(hitObject);
-            hitTarget = true;
+        if (intersects.length > 0) {
+          for (let i = 0; i < Math.min(intersects.length, 3); i++) {
+            const intersection = intersects[i];
+            console.log(`Intersection ${i}: distance=${intersection.distance.toFixed(2)}, object type=${intersection.object.type}, userData:`, intersection.object.userData);
+          }
+          
+          if (intersects[0].distance < 50) {
+            const hitObject = intersects[0].object;
+            console.log('Processing hit on object:', hitObject.type, 'userData:', hitObject.userData); // Debug log
+            if (hitObject.userData.isTarget) {
+              onHit(hitObject);
+              hitTarget = true;
+            }
           }
         }
         
