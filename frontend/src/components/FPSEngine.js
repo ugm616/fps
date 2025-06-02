@@ -205,11 +205,13 @@ const FPSEngine = ({ levelData, onBackToMenu }) => {
   const [score, setScore] = useState(0);
 
   const handleHit = (hitObject) => {
+    // Always consume ammo when firing
+    setAmmo(prev => Math.max(0, prev - 1));
+    
     // Handle target hits
-    console.log('Target hit!', hitObject); // Debug log
-    if (hitObject.userData.isTarget) {
+    if (hitObject && hitObject.userData.isTarget) {
+      console.log('Target hit!', hitObject); // Debug log
       setScore(prev => prev + 10);
-      setAmmo(prev => Math.max(0, prev - 1));
       
       // Simple hit effect - change color briefly
       const originalColor = hitObject.material.color.clone();
@@ -217,6 +219,8 @@ const FPSEngine = ({ levelData, onBackToMenu }) => {
       setTimeout(() => {
         hitObject.material.color.copy(originalColor);
       }, 100);
+    } else {
+      console.log('Miss or hit non-target object'); // Debug log
     }
   };
 
