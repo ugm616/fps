@@ -111,7 +111,6 @@ const FPSController = ({ levelData, onHit, health, setHealth }) => {
 
     // Simple collision detection and ground check
     const groundRay = new THREE.Raycaster(newPosition, new THREE.Vector3(0, -1, 0));
-    const scene = state.scene;
     const groundIntersects = groundRay.intersectObjects(scene.children, true);
     
     if (groundIntersects.length > 0 && groundIntersects[0].distance < 1.8) {
