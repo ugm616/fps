@@ -206,6 +206,28 @@ const Lighting = () => {
   );
 };
 
+// Aim Helper Component (optional visual aid)
+const AimHelper = () => {
+  const { camera } = useThree();
+  const meshRef = useRef();
+  
+  useFrame(() => {
+    if (meshRef.current) {
+      const direction = new THREE.Vector3();
+      camera.getWorldDirection(direction);
+      const targetPosition = camera.position.clone().add(direction.multiplyScalar(10));
+      meshRef.current.position.copy(targetPosition);
+    }
+  });
+  
+  return (
+    <mesh ref={meshRef} visible={false}> {/* Set visible={true} to see aim point */}
+      <sphereGeometry args={[0.1]} />
+      <meshBasicMaterial color="yellow" />
+    </mesh>
+  );
+};
+
 // Main FPS Engine Component
 const FPSEngine = ({ levelData, onBackToMenu }) => {
   const [health, setHealth] = useState(100);
