@@ -38,10 +38,16 @@ const FPSController = ({ levelData, onHit, health, setHealth }) => {
         
         raycaster.current.set(camera.position, direction);
         
-        // Check for hits on scene objects - exclude lights and camera
-        const meshObjects = scene.children.filter(child => child.type === 'Mesh' || child.type === 'Group');
-        const intersects = raycaster.current.intersectObjects(meshObjects, true);
-        console.log('Scene children:', scene.children.length, 'Mesh objects:', meshObjects.length, 'Intersects:', intersects.length); // Debug log
+        // Check for hits on scene objects - traverse all objects recursively
+        const allObjects = [];
+        scene.traverse((child) => {
+          if (child.isMesh) {
+            allObjects.push(child);
+          }
+        });
+        
+        const intersects = raycaster.current.intersectObjects(allObjects, false);
+        console.log('Scene children:', scene.children.length, 'All mesh objects found:', allObjects.length, 'Intersects:', intersects.length); // Debug log
         
         let hitTarget = false;
         if (intersects.length > 0) {
