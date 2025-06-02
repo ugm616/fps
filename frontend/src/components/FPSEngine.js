@@ -5,7 +5,7 @@ import * as THREE from 'three';
 
 // FPS Controller Component
 const FPSController = ({ levelData, onHit, health, setHealth }) => {
-  const { camera, gl } = useThree();
+  const { camera, gl, scene } = useThree();
   const controlsRef = useRef();
   const [keys, setKeys] = useState({});
   const velocity = useRef(new THREE.Vector3());
