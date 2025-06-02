@@ -38,9 +38,10 @@ const FPSController = ({ levelData, onHit, health, setHealth }) => {
         
         raycaster.current.set(camera.position, direction);
         
-        // Check for hits on scene objects
-        const intersects = raycaster.current.intersectObjects(scene.children, true);
-        console.log('Raycaster intersects:', intersects.length); // Debug log
+        // Check for hits on scene objects - exclude lights and camera
+        const meshObjects = scene.children.filter(child => child.type === 'Mesh' || child.type === 'Group');
+        const intersects = raycaster.current.intersectObjects(meshObjects, true);
+        console.log('Scene children:', scene.children.length, 'Mesh objects:', meshObjects.length, 'Intersects:', intersects.length); // Debug log
         
         let hitTarget = false;
         if (intersects.length > 0 && intersects[0].distance < 50) {
